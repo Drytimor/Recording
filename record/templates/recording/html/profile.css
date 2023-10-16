@@ -1,0 +1,87 @@
+/*
+верхняя навигация
+*/
+.nav_top {
+    overflow: hidden;
+    background-color: #333;
+    margin-bottom: 30px;
+}
+.nav_top a.right {
+    float: right;
+}
+
+.nav_top a {
+    display: block;
+    float: left;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: white;
+    text-align: center;
+}
+
+.nav_top a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/*
+левая навигация
+*/
+
+.row_left {
+    box-sizing: border-box;
+    width: 200px;
+    height: 550px;
+    margin-left: 50px;
+    background-color: #ddd;
+    padding: 20px;
+    float: left;
+}
+
+.nav_left {
+    margin-top: 5px;
+    padding-left: 5px;
+    list-style: none;
+}
+
+.nav_left a {
+    display: block;
+    width: 8em;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+.nav_left a:hover {
+    background-color: white;
+    color: black;
+}
+
+/*
+центральный блок
+*/
+
+.row_main {
+    box-sizing: border-box;
+    height: 550px;
+    margin-left: 300px;
+    margin-right: 50px;
+    padding-top: 50px;
+    background-color: #ddd;
+}
+
+img {
+    margin-left: 50px;
+    margin-right: 50px;
+    border-radius: 30px;
+    float: left;
+}
+
+.info {
+    margin-left: 250px;
+    margin-right: 250px;
+    box-sizing: border-box;
+}
+.info a {
+    text-decoration: none;
+}
