@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    "django_extensions",
     "record.apps.RecordConfig",
 
 ]
@@ -110,9 +111,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ru-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Moscow"
 
 USE_I18N = True
 
@@ -127,12 +128,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-#
+
 STATIC_URL = "static/"
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')  # для Nginx
+
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static/')]
 
 # путь хранения фото
-MEDIA_ROOT = os.path.join(BASE_DIR, 'photo')
-
+MEDIA_ROOT = os.path.join(BASE_DIR, 'photo/')
 # url для управления медиафайлами
-MEDIA_URL = 'photo/'
+MEDIA_URL = '/photo/'

@@ -63,16 +63,17 @@
 
 .row_main {
     box-sizing: border-box;
-    height: 550px;
+    height: auto;
     margin-left: 300px;
     margin-right: 300px;
-    padding-top: 50px;
+    padding-top: 20px;
+    padding-bottom: 20px;
     background-color: #ddd;
 }
 
 #recording {
     box-sizing: border-box;
-    height: 260px;
+    height: 300px;
     padding-left: 20px;
     padding-right: 20px;
     margin-right: 50px;

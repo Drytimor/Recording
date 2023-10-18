@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from project_recording.validators import PhoneNumberValidator
@@ -28,6 +29,8 @@ class Activity(models.TextChoices):
 class Organization(AbstractInfo):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+
     activity = models.CharField(max_length=50,
                                 default=Activity.SUNDRY,
                                 choices=Activity.choices)
@@ -40,8 +43,15 @@ class Organization(AbstractInfo):
                               null=True,
                               blank=True)
 
+    def __str__(self):
+        return f"{self.name}"
+
     class Meta:
         db_table = 'organization'
+        constraints = [
+            models.CheckConstraint(check=Q(activity__in=Activity.values),
+                                   name=f"check_activity_{db_table}")
+        ]
 
 
 class Customer(AbstractInfo):
@@ -59,6 +69,10 @@ class Customer(AbstractInfo):
 
     class Meta:
         db_table = 'customer'
+        constraints = [
+            models.CheckConstraint(check=Q(hobby__in=Activity.values),
+                                   name=f"check_hobby_{db_table}")
+        ]
 
 
 class Employee(AbstractInfo):
@@ -69,44 +83,44 @@ class Employee(AbstractInfo):
     lastname = models.CharField(max_length=255)
     profile = models.JSONField(null=True,
                                blank=True)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     photo = models.ImageField(upload_to='photo_employee',
                               width_field=150,
                               height_field=150,
                               null=True,
                               blank=True)
 
+    def __str__(self):
+        return f"{self.firstname}"
+
     class Meta:
         db_table = 'employee'
 
 
+class PaymentTariffChoices(models.TextChoices):
+    PAID = "PAID", "платно"
+    FREE = "FREE", "бесплатно"
+
+
+class StatusOpeningChoices(models.TextChoices):
+    OPEN = "OPEN", "открыт"
+    CLOSED = "CLOSE", "закрыт"
+
+
 class Events(models.Model):
-
-    PAID = "PAID"
-    FREE = "FREE"
-    PAYMENT_TARIFF_CHOICES = [
-        (PAID, "платно"),
-        (FREE, "бесплатно"),
-    ]
-
-    OPEN = "OPEN"
-    CLOSED = "CLOSE"
-    STATUS_OPENING_CHOICES = [
-        (OPEN, "открыт"),
-        (CLOSED, "закрыт"),
-    ]
 
     organization = models.ForeignKey('organization',
                                      on_delete=models.CASCADE)
     events_employee = models.ManyToManyField('employee')
     name = models.CharField(max_length=255)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    date_event = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
     status_tariff = models.CharField(max_length=4,
-                                     choices=PAYMENT_TARIFF_CHOICES)
+                                     choices=PaymentTariffChoices.choices)
     status_opening = models.CharField(max_length=10,
-                                      choices=STATUS_OPENING_CHOICES,
-                                      default=OPEN)
+                                      choices=StatusOpeningChoices.choices,
+                                      default=StatusOpeningChoices.OPEN)
     limit_clients = models.PositiveSmallIntegerField()
     quantity_clients = models.PositiveSmallIntegerField(default=0)
     price_event = models.DecimalField(max_digits=10,
@@ -115,13 +129,27 @@ class Events(models.Model):
                                       null=True)
     description = models.TextField(null=True, blank=True)
 
+    # def is_upperclass(self):
+    #     return self.status_tariff in {
+    #         self.PaymentTariffChoices.choices
+    #     }
+
+    def __str__(self):
+        return f"{self.name}"
+
     class Meta:
         db_table = 'events'
         constraints = [
             models.CheckConstraint(check=Q(quantity_clients__lte=F("limit_clients")),
-                                   name="check_quantity_clients"),
+                                   name=f"check_quantity_clients_{db_table}"),
             models.CheckConstraint(check=Q(limit_clients__gt=0),
-                                   name="check_limit_clients"),
+                                   name=f"check_limit_clients_{db_table}"),
+            models.CheckConstraint(check=Q(status_tariff__in=PaymentTariffChoices.values),
+                                   name=f"check_status_tariff_{db_table}"),
+            models.CheckConstraint(check=Q(status_opening__in=StatusOpeningChoices.values),
+                                   name=f"check_status_opening_{db_table}"),
+            models.CheckConstraint(check=Q(start_time__lt=F("end_time")),
+                                   name=f"check_time_{db_table}"),
         ]
 
 
@@ -134,27 +162,29 @@ class Recordings(models.Model):
         db_table = 'recordings'
         constraints = [
             models.UniqueConstraint(fields=['event', 'customer'],
-                                    name='unique_recording_customer')
+                                    name=f"unique_{db_table}_customer")
         ]
+
+
+class StatusRecordingChoices(models.TextChoices):
+    PAID = "PAID", "оплачено"
+    CANCELED = "CANC", "отменено"
 
 
 class HistoryRecordings(models.Model):
 
-    PAID = "PAID"
-    CANCELED = "CANC"
-    STATUS_RECORDING_CHOICES = [
-        (PAID, "оплачено"),
-        (CANCELED, "отменено"),
-    ]
-
     recording_id = models.PositiveBigIntegerField()
     event_id = models.PositiveBigIntegerField()
     customer_id = models.PositiveBigIntegerField()
-    status_recording = models.CharField(max_length=4, choices=STATUS_RECORDING_CHOICES)
+    status_recording = models.CharField(max_length=4, choices=StatusRecordingChoices.choices)
     date_recording = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'history_recording'
+        constraints = [
+            models.CheckConstraint(check=Q(status_recording__in=StatusRecordingChoices.values),
+                                   name="check_status_recording")
+            ]
 
 
 
