@@ -1,3 +1,4 @@
+from django.conf import settings
 """
 URL configuration for project_recording project.
 
@@ -19,5 +20,13 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("__debug__/", include("debug_toolbar.urls")),
     path("", include("record.urls"))
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path("__debug__/", include("debug_toolbar.urls")),
+        ] + urlpatterns
+

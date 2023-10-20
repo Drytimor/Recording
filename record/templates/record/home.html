@@ -24,12 +24,13 @@
 <!--Левая навигационная панель-->
 <div class="row_left">
     <ul class="nav_left">
-        <li><a href="url">Мероприятия</a></li>
-        <li><a href="url">Образование</a></li>
-        <li><a href="url">Наука</a></li>
-        <li><a href="url">Туризм</a></li>
-        <li><a href="url">Спорт</a></li>
-        <li><a href="url">Разное</a></li>
+        <li><a href="{% url 'activity' 'all' %}">Мероприятия</a></li>
+        <li><a href="{% url 'activity' 'education' %}">Образование</a></li>
+        <li><a href="{% url 'activity' 'science' %}">Наука</a></li>
+        <li><a href="{% url 'activity' 'tourism' %}">Туризм</a></li>
+        <li><a href="{% url 'activity' 'sport' %}">Спорт</a></li>
+        <li><a href="{% url 'activity' 'entertainment' %}">Развлечения</a></li>
+        <li><a href="{% url 'activity' 'sundry' %}">Разное</a></li>
     </ul>
 </div>
 
@@ -45,7 +46,7 @@
 </div>
 
 <!--центральный блок-->
-{% for event in all_events %}
+{% for event in detail_events %}
 <div class="row_main">
     <div id="recording">
         <p class="organization"><a id="get_organization" href="url">{{ event.organization__name }}</a></p>

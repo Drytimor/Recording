@@ -1,4 +1,3 @@
-from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from project_recording.validators import PhoneNumberValidator
@@ -23,12 +22,16 @@ class Activity(models.TextChoices):
     TOURISM = "TR", "туризм"
     EDUCATION = "ED", "образование"
     SCIENCE = "SC", "наука"
+    ENTERTAINMENT = "ET", "развлечения"
     SUNDRY = "SN", "разное"
 
 
-class Organization(AbstractInfo):
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class Organizations(AbstractInfo):
+
+    user = models.OneToOneField(User,
+                                on_delete=models.CASCADE,
+                                related_name='organizations')
     name = models.CharField(max_length=255)
 
     activity = models.CharField(max_length=50,
@@ -47,16 +50,18 @@ class Organization(AbstractInfo):
         return f"{self.name}"
 
     class Meta:
-        db_table = 'organization'
+        db_table = 'organizations'
         constraints = [
             models.CheckConstraint(check=Q(activity__in=Activity.values),
                                    name=f"check_activity_{db_table}")
         ]
 
 
-class Customer(AbstractInfo):
+class Customers(AbstractInfo):
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User,
+                                on_delete=models.CASCADE,
+                                related_name='customers')
     birth_date = models.DateField()
     hobby = models.CharField(max_length=50,
                              default=Activity.SUNDRY,
@@ -68,17 +73,18 @@ class Customer(AbstractInfo):
                               blank=True)
 
     class Meta:
-        db_table = 'customer'
+        db_table = 'customers'
         constraints = [
             models.CheckConstraint(check=Q(hobby__in=Activity.values),
                                    name=f"check_hobby_{db_table}")
         ]
 
 
-class Employee(AbstractInfo):
+class Employees(AbstractInfo):
 
-    organization = models.ForeignKey('organization',
-                                     on_delete=models.CASCADE)
+    organization = models.ForeignKey('organizations',
+                                     on_delete=models.CASCADE,
+                                     related_name='employees')
     firstname = models.CharField(max_length=255)
     lastname = models.CharField(max_length=255)
     profile = models.JSONField(null=True,
@@ -94,7 +100,7 @@ class Employee(AbstractInfo):
         return f"{self.firstname}"
 
     class Meta:
-        db_table = 'employee'
+        db_table = 'employees'
 
 
 class PaymentTariffChoices(models.TextChoices):
@@ -109,9 +115,11 @@ class StatusOpeningChoices(models.TextChoices):
 
 class Events(models.Model):
 
-    organization = models.ForeignKey('organization',
-                                     on_delete=models.CASCADE)
-    events_employee = models.ManyToManyField('employee')
+    organization = models.ForeignKey('organizations',
+                                     on_delete=models.CASCADE,
+                                     related_name='events')
+    employee = models.ManyToManyField('employees',
+                                      related_name='events')
     name = models.CharField(max_length=255)
     date_event = models.DateField()
     start_time = models.TimeField()
@@ -121,8 +129,8 @@ class Events(models.Model):
     status_opening = models.CharField(max_length=10,
                                       choices=StatusOpeningChoices.choices,
                                       default=StatusOpeningChoices.OPEN)
-    limit_clients = models.PositiveSmallIntegerField()
-    quantity_clients = models.PositiveSmallIntegerField(default=0)
+    limit_clients = models.SmallIntegerField()
+    quantity_clients = models.SmallIntegerField(default=0)
     price_event = models.DecimalField(max_digits=10,
                                       decimal_places=2,
                                       blank=True,
@@ -155,8 +163,12 @@ class Events(models.Model):
 
 class Recordings(models.Model):
 
-    event = models.ForeignKey('events', on_delete=models.CASCADE)
-    customer = models.ForeignKey('customer', on_delete=models.CASCADE)
+    event = models.ForeignKey('events',
+                              on_delete=models.CASCADE,
+                              related_name='recordings')
+    customer = models.ForeignKey('customers',
+                                 on_delete=models.CASCADE,
+                                 related_name='recordings')
 
     class Meta:
         db_table = 'recordings'
@@ -176,11 +188,12 @@ class HistoryRecordings(models.Model):
     recording_id = models.PositiveBigIntegerField()
     event_id = models.PositiveBigIntegerField()
     customer_id = models.PositiveBigIntegerField()
-    status_recording = models.CharField(max_length=4, choices=StatusRecordingChoices.choices)
+    status_recording = models.CharField(max_length=4,
+                                        choices=StatusRecordingChoices.choices)
     date_recording = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'history_recording'
+        db_table = 'history_recordings'
         constraints = [
             models.CheckConstraint(check=Q(status_recording__in=StatusRecordingChoices.values),
                                    name="check_status_recording")
