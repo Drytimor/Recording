@@ -1,7 +1,9 @@
-from django.core.validators import RegexValidator
+from django.core import validators
+from django.utils.deconstruct import deconstructible
 
 
-class PhoneNumberValidator(RegexValidator):
+@deconstructible
+class PhoneNumberValidator(validators.RegexValidator):
     """Проверяет номер телефона на соответствие"""
     regex = r"^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$"
 

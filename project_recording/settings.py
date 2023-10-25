@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "django_extensions",
     "record.apps.RecordConfig",
+    'django_filters',
 
 ]
 
@@ -59,6 +60,7 @@ MIDDLEWARE = [
 
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "debug_toolbar_force.middleware.ForceDebugToolbarMiddleware",
+
 ]
 
 ROOT_URLCONF = "project_recording.urls"

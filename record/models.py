@@ -9,9 +9,11 @@ from django.db.models import F, Q
 class AbstractInfo(models.Model):
     """Передает общую информацию:
        номер телефона"""
+    phone_number_validator = PhoneNumberValidator()
+
     phone_number = models.CharField(max_length=20,
                                     unique=True,
-                                    validators=[PhoneNumberValidator])
+                                    validators=[phone_number_validator])
 
     class Meta:
         abstract = True
@@ -24,7 +26,6 @@ class Activity(models.TextChoices):
     SCIENCE = "SC", "наука"
     ENTERTAINMENT = "ET", "развлечения"
     SUNDRY = "SN", "разное"
-
 
 
 class Organizations(AbstractInfo):
