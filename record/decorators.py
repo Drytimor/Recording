@@ -1,9 +1,9 @@
-def filter_decorator(func):
+
+def filter_events_decorator(func):
     def wrapper(**kwargs):
         if not kwargs:
-            return func
-        queryset = func().filter(**kwargs)
-        return queryset
+            return func()
+        return func().filter(**kwargs)
     return wrapper
 
 

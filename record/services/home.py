@@ -1,33 +1,44 @@
-from record.decorators import filter_decorator
 from record.selectors.home import all_events
+from ..forms import FilterEventsForm
+from ..models import ActivitysChoices
 
 
 class HomePage:
 
-    def __init__(self, activity):
-        self.activity = activity
+    def __init__(self, activity, filter):
+        self._activity = activity
+        self.status_tariff = filter.getlist("tariff")
+        self.status_opening = filter.getlist("open")
 
-    def get_all_events(self):
-        if self.activity == "all":
-            return filter_decorator(all_events)()
+    @property
+    def activity(self):
+        if self._activity == 'all':
+            return [activity for activity in ActivitysChoices.values]
+        return [self._activity]
 
-        elif self.activity == "education":
-            return filter_decorator(all_events)(organization__activity__exact="ED")
+    def _get_events_activity(self):
+        if not self.status_opening:
+            if not self.status_tariff:
+                return all_events(organization__activity__in=self.activity)
 
-        elif self.activity == "science":
-            return filter_decorator(all_events)(organization__activity__exact="SC")
+            return all_events(organization__activity__in=self.activity,
+                              status_tariff__in=self.status_tariff)
 
-        elif self.activity == "tourism":
-            return filter_decorator(all_events)(organization__activity__exact="TR")
+        elif not self.status_tariff:
+            return all_events(organization__activity__in=self.activity,
+                              status_opening__in=self.status_opening)
+        return all_events(organization__activity__in=self.activity,
+                          status_tariff__in=self.status_tariff,
+                          status_opening__in=self.status_opening)
 
-        elif self.activity == "sport":
-            return filter_decorator(all_events)(organization__activity__exact="SP")
+    def get_context_events(self):
+        return {
+            "detail_events": self._get_events_activity(),
+            "activity_events": ActivitysChoices.choices,
+            "form": FilterEventsForm,
+        }
 
-        elif self.activity == "entertainment":
-            return filter_decorator(all_events)(organization__activity__exact="ET")
 
-        elif self.activity == "sundry":
-            return filter_decorator(all_events)(organization__activity__exact="SN")
 
 
 

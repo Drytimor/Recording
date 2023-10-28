@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
 
     path("", views.index, name='index'),
-    path("<str:activity>/", views.AllEvents.as_view(), name='activity'),
+    path("record/<str:activity>/", views.EventsHomePage.as_view(), name='activity'),
 
 ]
 

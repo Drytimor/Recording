@@ -19,13 +19,29 @@ class AbstractInfo(models.Model):
         abstract = True
 
 
-class Activity(models.TextChoices):
-    SPORT = "SP", "спорт"
-    TOURISM = "TR", "туризм"
-    EDUCATION = "ED", "образование"
-    SCIENCE = "SC", "наука"
-    ENTERTAINMENT = "ET", "развлечения"
-    SUNDRY = "SN", "разное"
+class ActivitysChoices(models.TextChoices):
+    SPORT = "sport", "спорт"
+    TOURISM = "tourism", "туризм"
+    EDUCATION = "education", "образование"
+    SCIENCE = "science", "наука"
+    ENTERTAINMENT = "entertainment", "развлечения"
+    SUNDRY = "sundry", "разное"
+
+
+# class Activitys(models.Model):
+#     name = models.CharField(max_length=50,
+#                             default=ActivitysChoices.SUNDRY,
+#                             choices=ActivitysChoices.choices)
+#
+#     def __str__(self):
+#         return f"{self.name}"
+#
+#     class Meta:
+#         db_table = 'activitys'
+#         constraints = [
+#             models.CheckConstraint(check=Q(activity__in=ActivitysChoices.values),
+#                                    name=f"check_{db_table}")
+#         ]
 
 
 class Organizations(AbstractInfo):
@@ -36,8 +52,8 @@ class Organizations(AbstractInfo):
     name = models.CharField(max_length=255)
 
     activity = models.CharField(max_length=50,
-                                default=Activity.SUNDRY,
-                                choices=Activity.choices)
+                                default=ActivitysChoices.SUNDRY,
+                                choices=ActivitysChoices.choices)
 
     profile = models.JSONField(null=True,
                                blank=True)
@@ -53,7 +69,7 @@ class Organizations(AbstractInfo):
     class Meta:
         db_table = 'organizations'
         constraints = [
-            models.CheckConstraint(check=Q(activity__in=Activity.values),
+            models.CheckConstraint(check=Q(activity__in=ActivitysChoices.values),
                                    name=f"check_activity_{db_table}")
         ]
 
@@ -65,8 +81,8 @@ class Customers(AbstractInfo):
                                 related_name='customers')
     birth_date = models.DateField()
     hobby = models.CharField(max_length=50,
-                             default=Activity.SUNDRY,
-                             choices=Activity.choices)
+                             default=ActivitysChoices.SUNDRY,
+                             choices=ActivitysChoices.choices)
     photo = models.ImageField(upload_to='photo_customer',
                               width_field=150,
                               height_field=150,
@@ -76,7 +92,7 @@ class Customers(AbstractInfo):
     class Meta:
         db_table = 'customers'
         constraints = [
-            models.CheckConstraint(check=Q(hobby__in=Activity.values),
+            models.CheckConstraint(check=Q(hobby__in=ActivitysChoices.values),
                                    name=f"check_hobby_{db_table}")
         ]
 
@@ -105,13 +121,13 @@ class Employees(AbstractInfo):
 
 
 class PaymentTariffChoices(models.TextChoices):
-    PAID = "PAID", "платно"
-    FREE = "FREE", "бесплатно"
+    PAID = "PAID", "платные"
+    FREE = "FREE", "бесплатные"
 
 
 class StatusOpeningChoices(models.TextChoices):
-    OPEN = "OPEN", "открыт"
-    CLOSED = "CLOSE", "закрыт"
+    OPEN = "OPEN", "открытые"
+    CLOSED = "CLOSE", "закрытые"
 
 
 class Events(models.Model):
@@ -137,11 +153,6 @@ class Events(models.Model):
                                       blank=True,
                                       null=True)
     description = models.TextField(null=True, blank=True)
-
-    # def is_upperclass(self):
-    #     return self.status_tariff in {
-    #         self.PaymentTariffChoices.choices
-    #     }
 
     def __str__(self):
         return f"{self.name}"
