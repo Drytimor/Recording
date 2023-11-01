@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "django_extensions",
     "record.apps.RecordConfig",
-    'django_filters',
+    "django_filters",
+    "rest_framework",
 
 ]
 

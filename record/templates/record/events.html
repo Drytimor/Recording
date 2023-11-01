@@ -13,36 +13,33 @@
 
 <!--Верхняя навигационная панель-->
 <div class="nav_top">
-    <a href="{% url 'activity' 'all' %}">Мероприятия</a>
+    <a href="{% url 'event' %}">Мероприятия</a>
     <a href="url">Организации</a>
     <a class="right" href="url">Вход</a>
     <a class="right" href="url">Регистрация</a>
 </div>
 
 
-
 <!--Левая навигационная панель-->
 <div class="row_left">
     <ul class="nav_left">
-        {% for category in activity_events %}
-            <li><a href="{% url 'activity' category.0 %}">{{ category.1 | capfirst }}</a></li>
-        {% endfor %}
     </ul>
 </div>
 
-<!--Правая навигационная панель-->
 
+<!--Правая навигационная панель-->
 <form method="get">
 <div class="row_right">
     <ul class="nav_right">
-        {{ form }}
+        {{ category.form.as_ul }}
     </ul>
     <button type="submit">Найти</button>
 </div>
 </form>
 
-<!--центральный блок-->
-{% for event in detail_events %}
+
+<!--Центральный блок-->
+{% for event in category.qs %}
 <div class="row_main">
     <div id="recording">
         <p class="organization"><a id="get_organization" href="url">{{ event.organization__name }}</a></p>
@@ -58,6 +55,5 @@
     </div>
 </div>
 {% endfor %}
-
 </body>
 </html>

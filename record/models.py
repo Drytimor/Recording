@@ -28,20 +28,20 @@ class ActivitysChoices(models.TextChoices):
     SUNDRY = "sundry", "разное"
 
 
-# class Activitys(models.Model):
-#     name = models.CharField(max_length=50,
-#                             default=ActivitysChoices.SUNDRY,
-#                             choices=ActivitysChoices.choices)
-#
-#     def __str__(self):
-#         return f"{self.name}"
-#
-#     class Meta:
-#         db_table = 'activitys'
-#         constraints = [
-#             models.CheckConstraint(check=Q(activity__in=ActivitysChoices.values),
-#                                    name=f"check_{db_table}")
-#         ]
+class Activitys(models.Model):
+    name = models.CharField(max_length=50,
+                            default=ActivitysChoices.SUNDRY,
+                            choices=ActivitysChoices.choices)
+
+    def __str__(self):
+        return f"{self.name}"
+
+    class Meta:
+        db_table = 'activitys'
+        constraints = [
+            models.CheckConstraint(check=Q(name__in=ActivitysChoices.values),
+                                   name=f"check_{db_table}")
+        ]
 
 
 class Organizations(AbstractInfo):
@@ -51,9 +51,10 @@ class Organizations(AbstractInfo):
                                 related_name='organizations')
     name = models.CharField(max_length=255)
 
-    activity = models.CharField(max_length=50,
-                                default=ActivitysChoices.SUNDRY,
-                                choices=ActivitysChoices.choices)
+    activitys = models.ForeignKey('activitys',
+                                  on_delete=models.SET_NULL,
+                                  null=True,
+                                  related_name='organizations')
 
     profile = models.JSONField(null=True,
                                blank=True)
@@ -68,10 +69,6 @@ class Organizations(AbstractInfo):
 
     class Meta:
         db_table = 'organizations'
-        constraints = [
-            models.CheckConstraint(check=Q(activity__in=ActivitysChoices.values),
-                                   name=f"check_activity_{db_table}")
-        ]
 
 
 class Customers(AbstractInfo):
@@ -80,9 +77,8 @@ class Customers(AbstractInfo):
                                 on_delete=models.CASCADE,
                                 related_name='customers')
     birth_date = models.DateField()
-    hobby = models.CharField(max_length=50,
-                             default=ActivitysChoices.SUNDRY,
-                             choices=ActivitysChoices.choices)
+    hobby = models.ManyToManyField('activitys',
+                                   related_name='customers')
     photo = models.ImageField(upload_to='photo_customer',
                               width_field=150,
                               height_field=150,
@@ -91,10 +87,6 @@ class Customers(AbstractInfo):
 
     class Meta:
         db_table = 'customers'
-        constraints = [
-            models.CheckConstraint(check=Q(hobby__in=ActivitysChoices.values),
-                                   name=f"check_hobby_{db_table}")
-        ]
 
 
 class Employees(AbstractInfo):
@@ -121,13 +113,13 @@ class Employees(AbstractInfo):
 
 
 class PaymentTariffChoices(models.TextChoices):
-    PAID = "PAID", "платные"
-    FREE = "FREE", "бесплатные"
+    PAID = "paid", "платные"
+    FREE = "free", "бесплатные"
 
 
 class StatusOpeningChoices(models.TextChoices):
-    OPEN = "OPEN", "открытые"
-    CLOSED = "CLOSE", "закрытые"
+    OPEN = "open", "открытые"
+    CLOSED = "close", "закрытые"
 
 
 class Events(models.Model):
@@ -191,8 +183,8 @@ class Recordings(models.Model):
 
 
 class StatusRecordingChoices(models.TextChoices):
-    PAID = "PAID", "оплачено"
-    CANCELED = "CANC", "отменено"
+    PAID = "paid", "оплачено"
+    CANCELED = "canc", "отменено"
 
 
 class HistoryRecordings(models.Model):
