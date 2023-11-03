@@ -1,6 +1,6 @@
 from django.shortcuts import HttpResponse
 from django.views.generic import TemplateView
-from .services.home import get_context_events
+from .selectors.events import events_category
 
 # Create your views here.
 
@@ -15,7 +15,7 @@ class EventsHomePage(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(get_context_events(self.request.GET))
+        context.setdefault("category", events_category(self.request.GET))
         return context
 
 

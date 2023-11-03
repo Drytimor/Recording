@@ -6,6 +6,8 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'record/home.css' %}">
     <title>Запись</title>
+    <script src="{% static 'record/events.js' %}"></script>
+
 </head>
 
 <body style="background-color:#f1f1f1;">
@@ -13,7 +15,7 @@
 
 <!--Верхняя навигационная панель-->
 <div class="nav_top">
-    <a href="{% url 'event' %}">Мероприятия</a>
+    <a><button type="submit" id="button" onclick="getEvent()">Мероприятия</button></a>
     <a href="url">Организации</a>
     <a class="right" href="url">Вход</a>
     <a class="right" href="url">Регистрация</a>
@@ -29,31 +31,22 @@
 
 <!--Правая навигационная панель-->
 <form method="get">
+    {% csrf_token %}
 <div class="row_right">
     <ul class="nav_right">
         {{ category.form.as_ul }}
     </ul>
-    <button type="submit">Найти</button>
+    <button type="submit" >Найти</button>
 </div>
 </form>
 
 
 <!--Центральный блок-->
-{% for event in category.qs %}
-<div class="row_main">
-    <div id="recording">
-        <p class="organization"><a id="get_organization" href="url">{{ event.organization__name }}</a></p>
-        <div id="description">
-            <a id="event" href="url"> {{ event.name }}</a>
-            <p> Дата: {{ event.date_event | date:"d F Y" }}</p>
-            <p> Время: с {{ event.start_time | time:"H:i" }} по {{ event.end_time | time:"H:i"}} </p>
-            <p> Лимит участников: {{ event.limit_clients }} </p>
-            <p> Количество участников: {{ event.quantity_clients }} </p>
-            <p> Цена: {{ event.price_event | floatformat | default:"Бесплатно"}} </p>
-        </div>
-        <p class="organization"><a id="get_recording" href="url">Записаться</a></p>
-    </div>
+<div id="central">
+<!--описание-->
 </div>
-{% endfor %}
+
+
+
 </body>
 </html>

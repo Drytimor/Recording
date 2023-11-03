@@ -4,7 +4,7 @@ from .apis import EventsListApi
 
 
 events_api_patterns = [
-    path("events/", EventsListApi.as_view(), name='event')
+    path("events/", EventsListApi.as_view(), name='api_event')
 ]
 
 urlpatterns = [
