@@ -9,12 +9,7 @@ from record.selectors.events import events_category
 
 class EventsListApi(APIView):
     class Pagination(LimitOffsetPagination):
-        default_limit = 1
-
-    class FilterSetSerializer(serializers.Serializer):
-        activitys = serializers.CharField()
-        tariff = serializers.CharField()
-        open = serializers.CharField()
+        pass
 
     class OutputSerializer(serializers.Serializer):
         organization__name = serializers.CharField()
@@ -31,9 +26,30 @@ class EventsListApi(APIView):
                                                decimal_places=2)
 
     def get(self, request):
-        filter_serializer = self.FilterSetSerializer(data=request.query_params)
-        filter_serializer.is_valid(raise_exception=True)
-        events = events_category(filters=filter_serializer.validated_data).qs
+        events = events_category()
+        return get_paginated_response(
+            pagination_class=self.Pagination,
+            serializer_class=self.OutputSerializer,
+            queryset=events,
+            request=request,
+            view=self
+        )
+
+    def post(self, request):
+        events = events_category(filters=request.data)
         data = self.OutputSerializer(events, many=True).data
         return Response(data)
 
+
+def get_paginated_response(*, pagination_class, serializer_class, queryset, request, view):
+    paginator = pagination_class()
+    page = paginator.paginate_queryset(queryset, request, view=view)
+    page_link = paginator.get_html_context().get('page_links')
+    if page is not None:
+        serializer = serializer_class(page, many=True)
+        response = paginator.get_paginated_response(serializer.data)
+        return paginator.get_paginated_response(serializer.data)
+
+    serializer = serializer_class(queryset, many=True)
+
+    return Response(data=serializer.data)

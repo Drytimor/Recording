@@ -4,9 +4,8 @@
 <head>
 
     <meta charset="UTF-8">
+    <title>Мероприятия</title>
     <link rel="stylesheet" href="{% static 'record/home.css' %}">
-    <title>Запись</title>
-    <script src="{% static 'record/events.js' %}"></script>
 
 </head>
 
@@ -14,8 +13,8 @@
 
 
 <!--Верхняя навигационная панель-->
-<div class="nav_top">
-    <a><button type="submit" id="button" onclick="getEvent()">Мероприятия</button></a>
+<div class="nav_top" >
+    <a href="{% url 'event' %}">Мероприятия</a>
     <a href="url">Организации</a>
     <a class="right" href="url">Вход</a>
     <a class="right" href="url">Регистрация</a>
@@ -23,30 +22,46 @@
 
 
 <!--Левая навигационная панель-->
+
 <div class="row_left">
     <ul class="nav_left">
     </ul>
 </div>
 
-
 <!--Правая навигационная панель-->
-<form method="get">
-    {% csrf_token %}
+
 <div class="row_right">
-    <ul class="nav_right">
-        {{ category.form.as_ul }}
-    </ul>
-    <button type="submit" >Найти</button>
+    <button id="all_events">Сбросить фильтр</button>
+    <form method="get" id="filter_form">
+        {% csrf_token %}
+        <ul class="nav_right" >
+            {{ filter.form }}
+        </ul>
+        <button>Найти</button>
+    </form>
 </div>
-</form>
 
 
 <!--Центральный блок-->
-<div id="central">
-<!--описание-->
+<div id="records">
+
+</div>
+
+<div class="center" id="page">
+<!--    <div class="pagination">-->
+<!--        <a href="#">«</a>-->
+<!--        <a href="#">1</a>-->
+<!--        <a class="active" href="#">2</a>-->
+<!--        <a href="#">3</a>-->
+<!--        <a href="#">4</a>-->
+<!--        <a href="#">5</a>-->
+<!--        <a href="#">6</a>-->
+<!--        <a href="#">»</a>-->
+<!--</div>-->
 </div>
 
 
+<script src="{% static 'record/events.js' %}"></script>
 
 </body>
 </html>

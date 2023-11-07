@@ -81,9 +81,6 @@
     border: 0.1px solid red;
 }
 
-.organization {
-    text-align: center;
-}
 
 #get_organization, #get_recording, #event {
     text-decoration: none;
@@ -95,9 +92,30 @@
 }
 
 /*
+пагинация
+*/
+.pagination {
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.pagination a {
+    color: black;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.pagination a.active {
+    background-color: #ddd;
+    color: black;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+.center {text-align: center;}
+
+/*
 правая навигация
 */
-
 .row_right {
     box-sizing: border-box;
     width: 200px;

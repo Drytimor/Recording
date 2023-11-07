@@ -1,31 +1,25 @@
-from django_filters import FilterSet, ChoiceFilter
+from django_filters import FilterSet, MultipleChoiceFilter
 from record.models import Events, ActivitysChoices, PaymentTariffChoices, StatusOpeningChoices
 from django.forms import widgets
 
 
 class EventsCategoryFilter(FilterSet):
 
-    activitys = ChoiceFilter(field_name='organization__activitys__name',
-                             lookup_expr='exact',
-                             label='activitys',
-                             widget=widgets.Select,
-                             choices=ActivitysChoices.choices,
-                             empty_label='Все'
-                             )
-    tariff = ChoiceFilter(field_name='status_tariff',
-                          lookup_expr='exact',
-                          label='tariff',
-                          widget=widgets.Select,
-                          choices=PaymentTariffChoices.choices,
-                          empty_label='Все',
-                          )
-    open = ChoiceFilter(field_name='status_opening',
-                        lookup_expr='exact',
-                        label='open',
-                        widget=widgets.Select,
-                        choices=StatusOpeningChoices.choices,
-                        empty_label='Все',
-                        )
+    activitys = MultipleChoiceFilter(field_name='organization__activitys__name',
+                                     label='activitys',
+                                     widget=widgets.CheckboxSelectMultiple,
+                                     choices=ActivitysChoices.choices,
+                                     )
+    tariff = MultipleChoiceFilter(field_name='status_tariff',
+                                  label='tariff',
+                                  widget=widgets.CheckboxSelectMultiple,
+                                  choices=PaymentTariffChoices.choices,
+                                  )
+    open = MultipleChoiceFilter(field_name='status_opening',
+                                label='open',
+                                widget=widgets.CheckboxSelectMultiple,
+                                choices=StatusOpeningChoices.choices,
+                                )
 
     class Meta:
         model = Events
@@ -41,7 +35,7 @@ def events_category(filters=None) -> EventsCategoryFilter:
                                "quantity_clients", "price_event",
                                "organization__name",
                                )
-    return EventsCategoryFilter(filters, qs)
+    return EventsCategoryFilter(filters, qs).qs
 
 
 

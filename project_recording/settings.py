@@ -46,6 +46,19 @@ INSTALLED_APPS = [
 
 ]
 
+# REST_FRAMEWORK = {
+#     'DEFAULT_FILTER_BACKENDS': (
+#         'django_filters.rest_framework.DjangoFilterBackend',
+#         ...
+#     ),
+# }
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 2,
+}
+
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
@@ -151,3 +164,4 @@ if not DEBUG:
 MEDIA_ROOT = os.path.join(BASE_DIR, 'photo/')
 # url для управления медиафайлами
 MEDIA_URL = '/photo/'
+
