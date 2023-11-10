@@ -1,4 +1,5 @@
 from rest_framework.pagination import LimitOffsetPagination
+from collections import OrderedDict
 from rest_framework.views import APIView
 from rest_framework import serializers
 from rest_framework.response import Response
@@ -8,8 +9,16 @@ from record.selectors.events import events_category
 
 
 class EventsListApi(APIView):
+
     class Pagination(LimitOffsetPagination):
-        pass
+        def get_paginated_response(self, data):
+            return Response(OrderedDict([
+                ('count', self.count),
+                ('next', self.get_next_link()),
+                ('previous', self.get_previous_link()),
+                ('results', data),
+                ('page_links', self.get_html_context().get('page_links'))
+            ]))
 
     class OutputSerializer(serializers.Serializer):
         organization__name = serializers.CharField()
@@ -26,7 +35,7 @@ class EventsListApi(APIView):
                                                decimal_places=2)
 
     def get(self, request):
-        events = events_category()
+        events = events_category(filters=request.query_params)
         return get_paginated_response(
             pagination_class=self.Pagination,
             serializer_class=self.OutputSerializer,
@@ -35,19 +44,12 @@ class EventsListApi(APIView):
             view=self
         )
 
-    def post(self, request):
-        events = events_category(filters=request.data)
-        data = self.OutputSerializer(events, many=True).data
-        return Response(data)
-
 
 def get_paginated_response(*, pagination_class, serializer_class, queryset, request, view):
     paginator = pagination_class()
     page = paginator.paginate_queryset(queryset, request, view=view)
-    page_link = paginator.get_html_context().get('page_links')
     if page is not None:
         serializer = serializer_class(page, many=True)
-        response = paginator.get_paginated_response(serializer.data)
         return paginator.get_paginated_response(serializer.data)
 
     serializer = serializer_class(queryset, many=True)

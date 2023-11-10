@@ -6,17 +6,17 @@ from django.forms import widgets
 class EventsCategoryFilter(FilterSet):
 
     activitys = MultipleChoiceFilter(field_name='organization__activitys__name',
-                                     label='activitys',
+                                     label='категория',
                                      widget=widgets.CheckboxSelectMultiple,
                                      choices=ActivitysChoices.choices,
                                      )
     tariff = MultipleChoiceFilter(field_name='status_tariff',
-                                  label='tariff',
+                                  label='вход',
                                   widget=widgets.CheckboxSelectMultiple,
                                   choices=PaymentTariffChoices.choices,
                                   )
     open = MultipleChoiceFilter(field_name='status_opening',
-                                label='open',
+                                label='статус',
                                 widget=widgets.CheckboxSelectMultiple,
                                 choices=StatusOpeningChoices.choices,
                                 )

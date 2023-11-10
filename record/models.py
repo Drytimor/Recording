@@ -24,7 +24,7 @@ class ActivitysChoices(models.TextChoices):
     TOURISM = "tourism", "туризм"
     EDUCATION = "education", "образование"
     SCIENCE = "science", "наука"
-    ENTERTAINMENT = "entertainment", "развлечения"
+    ENTERTAINMENT = "entertainment", "развлечение"
     SUNDRY = "sundry", "разное"
 
 
@@ -113,13 +113,13 @@ class Employees(AbstractInfo):
 
 
 class PaymentTariffChoices(models.TextChoices):
-    PAID = "paid", "платные"
-    FREE = "free", "бесплатные"
+    PAID = "paid", "платный"
+    FREE = "free", "бесплатный"
 
 
 class StatusOpeningChoices(models.TextChoices):
-    OPEN = "open", "открытые"
-    CLOSED = "close", "закрытые"
+    OPEN = "open", "открытый"
+    CLOSED = "close", "закрытый"
 
 
 class Events(models.Model):

@@ -4,7 +4,7 @@
 .nav_top {
     overflow: hidden;
     background-color: #333;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 .nav_top a.right {
     float: right;
@@ -15,136 +15,115 @@
     float: left;
     padding: 12px 20px;
     text-decoration: none;
+    font-size: 12px;
+    text-transform: uppercase;
     color: white;
     text-align: center;
 }
 
 .nav_top a:hover {
-    background-color: #ddd;
+    background-color: rgb(240, 240, 240);
     color: black;
 }
 
 /*
 левая навигация
 */
-
-.row_left {
+.nav_left {
     box-sizing: border-box;
     width: 200px;
     height: 550px;
     margin-left: 50px;
-    background-color: #ddd;
+    background-color: rgb(240, 240, 240);
     padding: 20px;
     float: left;
-}
-
-.nav_left {
-    margin-top: 5px;
-    padding-left: 5px;
-    list-style: none;
-}
-
-.nav_left a {
-    display: block;
-    width: 8em;
-    padding: 10px;
-    text-decoration: none;
-    color: #333;
-}
-
-.nav_left a:hover {
-    background-color: white;
-    color: black;
 }
 
 /*
 центральный блок
 */
-
-.row_main {
+.recording {
     box-sizing: border-box;
-    height: auto;
+    height: 270px;
     margin-left: 300px;
     margin-right: 300px;
-    padding-top: 20px;
-    padding-bottom: 10px;
-    background-color: #ddd;
+    padding-top: 1px;
+    margin-bottom: 10px;
+    border-radius: 30px;
+    background-color: rgb(240, 240, 240);
 }
 
-#recording {
-    box-sizing: border-box;
-    height: 300px;
-    padding-left: 20px;
-    padding-right: 20px;
-    margin-right: 50px;
-    margin-left: 50px;
-    border: 0.1px solid red;
-}
-
-
-#get_organization, #get_recording, #event {
+#organization_name, #sign_up, #event_name {
     text-decoration: none;
 }
 
-#description {
-    margin-top: 10px;
-    margin-bottom: 10px;
+#description ul {
+    padding-left: 40px;
+    padding-bottom: 10px;
+    line-height: 1.6;
+    list-style: none;
 }
+
+#message_empty {
+    font-size: 60px;
+    color:rgb(240, 240, 240);
+    font-style: italic;
+}
+
 
 /*
 пагинация
 */
 .pagination {
     display: inline-block;
-    margin-top: 20px;
+    margin-top: 5px;
 }
 
 .pagination a {
     color: black;
-    padding: 8px 16px;
+    padding: 4px 12px;
     text-decoration: none;
 }
 
 .pagination a.active {
-    background-color: #ddd;
-    color: black;
+    background-color: #333;
+    color: white;
 }
 
-.pagination a:hover:not(.active) {background-color: #ddd;}
+.pagination a:hover:not(.active) {background-color: rgb(240, 240, 240);}
 .center {text-align: center;}
+
 
 /*
 правая навигация
 */
-.row_right {
+.nav_right {
     box-sizing: border-box;
     width: 200px;
     height: 550px;
-    margin-right: 50px;
-    background-color: #ddd;
     padding: 20px;
+    margin-right: 50px;
     float: right;
+    background-color: rgb(240, 240, 240);
 }
 
-
-.nav_right {
-    margin-top: 5px;
-    padding-right: 5px;
-    list-style: none;
-}
-
-.nav_right a {
-    display: block;
-    width: 8em;
-    padding: 10px;
-    text-decoration: none;
-    color: #333;
-    float: right;
-}
-
-.nav_right a:hover {
+.btn_filter {
     background-color: white;
-    color: black;
+    display: inline-block;
+    float: left;
+    margin: 10px 2px 2px 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+.btn_filter:hover {
+    background-color: #333;
+    color: white;
+    cursor: pointer;
+}
+
+.btn_filter:active {
+    transform: translateY(1px);
 }
 
 

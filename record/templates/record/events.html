@@ -4,41 +4,82 @@
 <head>
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Мероприятия</title>
-    <link rel="stylesheet" href="{% static 'record/home.css' %}">
+
+    <link href="{% static 'record/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+<!--    <link rel="stylesheet" href="{% static 'record/home.css' %}">-->
+    <script defer src="{% static 'record/events.js' %}"></script>
+    <script defer src="{% static 'record/bootstrap/js/bootstrap.bundle.js' %}"></script>
+
 
 </head>
 
-<body style="background-color:#f1f1f1;">
+<body style="background-color:white">
 
 
 <!--Верхняя навигационная панель-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Главная</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Рекомендуемые</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Цена</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Отключенная</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<nav class=" navbar navbar-expand-lg navbar-light bg-light ">
+    <div class=" container-fluid ">
+        <div class="d-flex flex-row bd-highlight ">
+            <div class=" bd-highlight ">
+                <a class="me-3" href="{% url 'event' %}">мероприятия</a>
+                <a  href="">организации</a>
+            </div>
+        </div>
+        <div class="d-flex flex-row-reverse bd-highlight">
+            <div class=" bd-highlight ">
+                <a href="">вход</a>
+                <a class="ms-3" href="">регистрация</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
 <div class="nav_top" >
-    <a href="{% url 'event' %}">Мероприятия</a>
-    <a href="url">Организации</a>
-    <a class="right" href="url">Вход</a>
-    <a class="right" href="url">Регистрация</a>
+
+<!--        <form method="post">-->
+<!--            {% csrf_token %}-->
+<!--            {{ form_user }}-->
+<!--            {{ form_customer }}-->
+<!--            <button>регистрация</button>-->
+<!--        </form>-->
 </div>
 
 
 <!--Левая навигационная панель-->
 
-<div class="row_left">
-    <ul class="nav_left">
-    </ul>
-</div>
+
 
 <!--Правая навигационная панель-->
 
-<div class="row_right">
-    <button id="all_events">Сбросить фильтр</button>
+<div class="container">
     <form method="get" id="filter_form">
-        {% csrf_token %}
-        <ul class="nav_right" >
-            {{ filter.form }}
-        </ul>
-        <button>Найти</button>
+        {{ filter.form.as_div }}
+        <button class="btn_filter">найти</button>
     </form>
+        <button class="btn_filter" id="all_events">сбросить</button>
 </div>
 
 
@@ -47,21 +88,12 @@
 
 </div>
 
+<!--Пагинация-->
 <div class="center" id="page">
-<!--    <div class="pagination">-->
-<!--        <a href="#">«</a>-->
-<!--        <a href="#">1</a>-->
-<!--        <a class="active" href="#">2</a>-->
-<!--        <a href="#">3</a>-->
-<!--        <a href="#">4</a>-->
-<!--        <a href="#">5</a>-->
-<!--        <a href="#">6</a>-->
-<!--        <a href="#">»</a>-->
-<!--</div>-->
+
 </div>
 
 
-<script src="{% static 'record/events.js' %}"></script>
 
 </body>
 </html>
