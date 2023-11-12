@@ -19,80 +19,77 @@
 
 
 <!--Верхняя навигационная панель-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Главная</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Рекомендуемые</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Цена</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Отключенная</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
-<nav class=" navbar navbar-expand-lg navbar-light bg-light ">
+<nav class=" navbar navbar-expand-lg navbar-dark bg-dark ">
     <div class=" container-fluid ">
         <div class="d-flex flex-row bd-highlight ">
-            <div class=" bd-highlight ">
-                <a class="me-3" href="{% url 'event' %}">мероприятия</a>
-                <a  href="">организации</a>
-            </div>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="me-2 nav-link text-white" href="{% url 'event' %}">мероприятия</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="">организации</a></li>
+            </ul>
         </div>
         <div class="d-flex flex-row-reverse bd-highlight">
-            <div class=" bd-highlight ">
-                <a href="">вход</a>
-                <a class="ms-3" href="">регистрация</a>
-            </div>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link text-white" href="">вход</a></li>
+                <li class="nav-item"><a class="ms-2 nav-link text-white" role="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">регистрация</a></li>
+            </ul>
         </div>
     </div>
 </nav>
 
-<div class="nav_top" >
 
-<!--        <form method="post">-->
-<!--            {% csrf_token %}-->
-<!--            {{ form_user }}-->
-<!--            {{ form_customer }}-->
-<!--            <button>регистрация</button>-->
-<!--        </form>-->
+
+<!-- Модальное окно регистрации пользователя-->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Заголовок модального окна</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+          </div>
+              <div class="modal-body" id="registration_form">
+                  <form method="post">
+                  {% csrf_token %}
+                  {{ form_user.as_p}}<br>
+                  {{ form_customer.as_p }}
+                  <button>регистрация</button>
+                  </form>
+              </div>
+          <div class="modal-footer">
+<!--            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>-->
+<!--            <button type="button" class="btn btn-primary">Понял</button>-->
+          </div>
+    </div>
+  </div>
 </div>
 
 
-<!--Левая навигационная панель-->
 
-
-
-<!--Правая навигационная панель-->
-
-<div class="container">
-    <form method="get" id="filter_form">
-        {{ filter.form.as_div }}
-        <button class="btn_filter">найти</button>
-    </form>
-        <button class="btn_filter" id="all_events">сбросить</button>
+<div class="container-fluid">
+    <div class="row">
+        <!--Левая колонка-->
+        <div class="col-2 ">
+            <div class="p-3"></div>
+        </div>
+        <!--Центральная колонка-->
+        <div class="col-8 px-5">
+        <!--Карточки мероприятий-->
+            <div class="p-3 px-1" id="records" ></div>
+            <!--Пагинация-->
+            <nav id="page"></nav>
+        </div>
+        <!--Правая колонка-->
+        <div class="col-2">
+            <div class="p-3">
+                <!--Фильтр мероприятий-->
+                <form method="get" id="filter_form">
+                    {{ filter.form.as_div }}
+                    <button type="submit" class="btn btn-dark btn-sm">найти</button>
+                    <button type="reset" class="btn btn-dark btn-sm">сбросить</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
-
-
-<!--Центральный блок-->
-<div id="records">
-
-</div>
-
-<!--Пагинация-->
-<div class="center" id="page">
-
-</div>
-
 
 
 </body>

@@ -1,20 +1,5 @@
-const url = new URL('http://127.0.0.1:10000/api/events-list/')
 
-
-const RequestAllEvents = new Request(url.origin + url.pathname, {
-    method: "GET"
-})
-
-document.addEventListener('DOMContentLoaded', RequestEventsAPI(RequestAllEvents))
-
-const GetAllEvents = document.querySelector('#all_events')
-GetAllEvents.addEventListener('click', () => {
-    for (f of FilterForm) {
-        f.checked = false
-}
-    RequestEventsAPI(RequestAllEvents)
-});
-
+document.addEventListener('DOMContentLoaded', RequestEventsAPI('http://127.0.0.1:10000/api/events-list/'))
 
 const Pagination = document.querySelector('#page')
 Pagination.addEventListener('click', (e) => {
@@ -25,19 +10,33 @@ Pagination.addEventListener('click', (e) => {
     }
 })
 
+const RegistrationForm = document.querySelector('#registration_form')
+
 
 const FilterForm = document.querySelector('#filter_form');
 
-FilterForm.addEventListener('submit', (e) => {
+FilterForm.addEventListener('submit',  ListenerForm)
+FilterForm.addEventListener('reset', ListenerForm)
+
+
+function ListenerForm(e) {
+    const url = new URL('http://127.0.0.1:10000/api/events-list/')
     e.preventDefault();
-    let paramFilter = new URLSearchParams()
-    const form = new FormData(FilterForm)
-    for (let [name, value] of form.entries()) {
-        paramFilter.append(name, value)
+    if (e.type === "submit") {
+        let paramFilter = new URLSearchParams()
+        const form = new FormData(FilterForm)
+        for (let [name, value] of form.entries()) {
+            paramFilter.append(name, value)
+        }
+        url.search = paramFilter
+    } else {
+        url.search = ''
+        for (f of FilterForm) {
+            f.checked = false
+            }
     }
-    url.search = paramFilter
     RequestEventsAPI(url)
-});
+}
 
 
 async function RequestEventsAPI(request) {
@@ -66,56 +65,81 @@ function CreateRecordingsHTML (results, records_count) {
                 elem.price_event += ' р'
             }
             let record = `
-                <div class="recording">
-                <div id="description">
-                    <p class="center"><a id="organization_name" href="url">${ elem.organization__name}</a></p>
-                    <ul>
-                        <li><a id="event_name" href="url">${elem.name}</a></li>
-                        <li> Дата: ${elem.date_event}</li>
-                        <li> Время: с ${elem.start_time} по ${elem.end_time}</li>
-                        <li> Лимит участников: ${elem.limit_clients} </li>
-                        <li> Количество участников: ${elem.quantity_clients} </li>
-                        <li> Цена: ${elem.price_event}</li>
-                    </ul>
-                    <p class="center"><a id="sign_up" href="url">Записаться</a></p>
+            <div class="card text-dark bg-light mb-2">
+                <div class="row g-0 ">
+                    <div class="col-md-4">
+                        <img src="" class="img-fluid rounded-start" alt="">
+                    </div>
+                    <div class="col-md-8 g-0">
+                        <div class="card-body">
+                        <h5 class="text-center card-title"><a class="text-decoration-none" href="">${ elem.organization__name}</a></h5>
+                        <ul>
+                            <li class="d-block"><a class="text-decoration-none" href="">${elem.name}</a></li>
+                            <li class="d-block"> Дата: ${elem.date_event}</li>
+                            <li class="d-block"> Время: с ${elem.start_time} по ${elem.end_time}</li>
+                            <li class="d-block"> Лимит участников: ${elem.limit_clients} </li>
+                            <li class="d-block"> Количество участников: ${elem.quantity_clients} </li>
+                            <li class="d-block"> Цена: ${elem.price_event}</li>
+                        </ul>
+                        <p class="text-center mb-0"><a class="text-decoration-none btn-sm btn-dark" href="">Записаться</a></p>
+                        </div>
+                    </div>
                 </div>
-                </div>
-                `
-            records_html += record
+            </div>
+            `
+            records_html +=record
         }
         records.innerHTML = records_html
     }
 }
 
+
 function CreatePaginationHTML (page_links, page_previous, page_next, count_page) {
     const pagination = document.querySelector('#page')
+    const urlPage = new URL('http://127.0.0.1:10000/api/events-list/')
     if (count_page == 0) {
         pagination.firstElementChild.remove()
     } else {
-        let page_number_html = ``
-        for (let [url_page, number_page, active_link] of page_links) {
+        const paramPage = new URLSearchParams()
+        const default_limit_page = 2
+        let offset_param_page = 0
+        paramPage.append('limit', default_limit_page)
+        paramPage.append('offset', offset_param_page)
+        urlPage.search = paramPage
+        let page_number_html = ''
+        for (let [page_url, number_page, active_link] of page_links) {
+            urlPage.searchParams.set('offset', offset_param_page)
+            offset_param_page += 2
             let css_active = ''
             if(active_link) {
                 css_active += 'active'}
-            page_number_html += `<a class="${css_active}" href="${url_page}">${number_page}</a>`
+            page_number_html += `
+                <li class="page-item ${css_active}">
+                    <a class="page-link" href="${urlPage.href}">${number_page}</a>
+                </li>
+                `
             }
         let pagination_html = `
-            <div class="pagination">
-                <a href=${page_previous}>«</a>
+            <ul class="pagination pagination-sm justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" href=${page_previous}>«</a>
+                </li>
                 ${page_number_html}
-                <a href=${page_next}>»</a>
-            </div>
+                <li class="page-item">
+                    <a class="page-link" href=${page_next}>»</a>
+                </li>
+            </ul>
             `
         pagination.innerHTML = pagination_html
     }
-
 }
+
 
 function DisplaysMessageForEmptySearch (records) {
     let message = `
-        <div class="center" id="message_empty">
+        <h1 class="text-center fst-italic text-secondary">
             пусто
-        </div>
-    `
+        </h1>
+        `
     records.innerHTML = message
 }

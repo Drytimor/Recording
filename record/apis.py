@@ -11,7 +11,10 @@ from record.selectors.events import events_category
 class EventsListApi(APIView):
 
     class Pagination(LimitOffsetPagination):
+        default_limit = 2
+
         def get_paginated_response(self, data):
+
             return Response(OrderedDict([
                 ('count', self.count),
                 ('next', self.get_next_link()),
