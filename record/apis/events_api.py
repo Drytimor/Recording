@@ -3,9 +3,8 @@ from collections import OrderedDict
 from rest_framework.views import APIView
 from rest_framework import serializers
 from rest_framework.response import Response
-
 from record.models import PaymentTariffChoices, StatusOpeningChoices
-from record.selectors.events import events_category
+from record.selectors.events_selectors import events_category
 
 
 class EventsListApi(APIView):

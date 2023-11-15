@@ -27,7 +27,7 @@ class EventsCategoryFilter(FilterSet):
                   "open"]
 
 
-def events_category(filters=None) -> EventsCategoryFilter:
+def events_category(filters=None):
     filters = filters or {}
     qs = Events.objects.values("name", "start_time", "end_time",
                                "date_event", "status_tariff",

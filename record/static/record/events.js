@@ -11,7 +11,26 @@ Pagination.addEventListener('click', (e) => {
 })
 
 const RegistrationForm = document.querySelector('#registration_form')
+RegistrationForm.addEventListener("submit", (e) => {
+    const url = new URL('http://127.0.0.1:10000/api/registration/')
+    e.preventDefault()
+    const request = new Request(url, {
+        method: "POST",
+        body: new FormData(RegistrationForm),
+    });
+    const FormRegistr = new FormData(RegistrationForm)
+    for (let [name, value] of FormRegistr.entries()) {
+        console.log(name, value)
+    }
+    console.log(request)
+    CreateUserApi(request)
+})
 
+async function CreateUserApi(request){
+    let response = await fetch(request)
+    let event_data = await response.json()
+    console.log(event_data)
+}
 
 const FilterForm = document.querySelector('#filter_form');
 
@@ -27,7 +46,7 @@ function ListenerForm(e) {
         const form = new FormData(FilterForm)
         for (let [name, value] of form.entries()) {
             paramFilter.append(name, value)
-        }
+            }
         url.search = paramFilter
     } else {
         url.search = ''

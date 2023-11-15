@@ -1,10 +1,11 @@
 from django.urls import path, include
 from . import views
-from .apis import EventsListApi
-
+from record.apis.events_api import EventsListApi
+from .apis.users_api import CreateUserApi
 
 events_api_patterns = [
-    path("events-list/", EventsListApi.as_view(), name='api_event')
+    path("events-list/", EventsListApi.as_view()),
+    path("registration/", CreateUserApi.as_view())
 ]
 
 urlpatterns = [

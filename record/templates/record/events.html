@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+{% load rest_framework %}
 <head>
 
     <meta charset="UTF-8">
@@ -30,7 +31,7 @@
         <div class="d-flex flex-row-reverse bd-highlight">
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link text-white" href="">вход</a></li>
-                <li class="nav-item"><a class="ms-2 nav-link text-white" role="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">регистрация</a></li>
+                <li class="nav-item"><a class="ms-2 nav-link text-white" role="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >регистрация</a></li>
             </ul>
         </div>
     </div>
@@ -46,12 +47,11 @@
             <h5 class="modal-title" id="staticBackdropLabel">Заголовок модального окна</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
           </div>
-              <div class="modal-body" id="registration_form">
-                  <form method="post">
-                  {% csrf_token %}
-                  {{ form_user.as_p}}<br>
-                  {{ form_customer.as_p }}
-                  <button>регистрация</button>
+              <div class="modal-body" >
+                  <form method="POST" id="registration_form">
+                      {% csrf_token %}
+                      {% render_form registration %}
+                  <button type="submit">регистрация</button>
                   </form>
               </div>
           <div class="modal-footer">

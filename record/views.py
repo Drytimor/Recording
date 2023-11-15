@@ -1,7 +1,8 @@
 from django.shortcuts import HttpResponse
 from django.views.generic import TemplateView
-from .forms import CreateUserFrom, CreateCustomersForm
-from .selectors.events import EventsCategoryFilter
+
+from .apis.users_api import CreateUserApi
+from .selectors.events_selectors import EventsCategoryFilter
 
 
 # Create your views here.
@@ -18,8 +19,7 @@ class EventsHomePage(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.__setitem__("filter", EventsCategoryFilter)
-        context.__setitem__("form_user", CreateUserFrom)
-        context.__setitem__("form_customer", CreateCustomersForm)
+        context.__setitem__("registration", CreateUserApi.InputSerializer)
         return context
 
 

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, UserManager
 from project_recording.validators import PhoneNumberValidator
 from django.db.models import F, Q
 
@@ -77,8 +77,6 @@ class Customers(AbstractInfo):
                                 on_delete=models.CASCADE,
                                 related_name='customers')
     birth_date = models.DateField()
-    hobby = models.ManyToManyField('activitys',
-                                   related_name='customers')
     photo = models.ImageField(upload_to='photo_customer',
                               width_field=150,
                               height_field=150,
