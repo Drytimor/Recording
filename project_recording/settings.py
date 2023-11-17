@@ -75,7 +75,6 @@ MIDDLEWARE = [
 
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "debug_toolbar_force.middleware.ForceDebugToolbarMiddleware",
-    "project_recording.middleware.ExceptionMiddleware"
 
 ]
 

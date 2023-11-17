@@ -12,7 +12,7 @@ Pagination.addEventListener('click', (e) => {
 
 const RegistrationForm = document.querySelector('#registration_form')
 RegistrationForm.addEventListener("submit", (e) => {
-    const url = new URL('http://127.0.0.1:10000/api/registration/')
+    const url = new URL('http://127.0.0.1:10000/create_user/')
     e.preventDefault()
     const request = new Request(url, {
         method: "POST",

@@ -11,6 +11,7 @@ events_api_patterns = [
 urlpatterns = [
     path("", views.index, name='index'),
     path("events/", views.EventsHomePage.as_view(), name='event'),
+    path("create_user/", views.CreateUserView.as_view(), name='create_user'),
     path("api/", include(events_api_patterns)),
 ]
 

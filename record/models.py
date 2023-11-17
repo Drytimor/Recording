@@ -12,6 +12,7 @@ class AbstractInfo(models.Model):
 
     phone_number = models.CharField(max_length=20,
                                     unique=True,
+                                    blank=True,
                                     error_messages={
                                         "unique": "такой номер телефона уже зарегистрирован"
                                     })
@@ -76,7 +77,7 @@ class Customers(AbstractInfo):
     user = models.OneToOneField(User,
                                 on_delete=models.CASCADE,
                                 related_name='customers')
-    birth_date = models.DateField()
+    birth_date = models.DateField(blank=True)
     photo = models.ImageField(upload_to='photo_customer',
                               width_field=150,
                               height_field=150,

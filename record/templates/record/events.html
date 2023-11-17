@@ -50,7 +50,8 @@
               <div class="modal-body" >
                   <form method="POST" id="registration_form">
                       {% csrf_token %}
-                      {% render_form registration %}
+                      {{ create_user.as_div }}
+                      {{ create_profile.as_p }}
                   <button type="submit">регистрация</button>
                   </form>
               </div>
