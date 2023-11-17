@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import project_recording.validators
+import record.validators
 
 
 class Migration(migrations.Migration):
@@ -30,7 +30,6 @@ class Migration(migrations.Migration):
                     models.CharField(
                         max_length=20,
                         unique=True,
-                        validators=[project_recording.validators.PhoneNumberValidator],
                     ),
                 ),
                 ("birth_date", models.DateField()),
@@ -88,7 +87,6 @@ class Migration(migrations.Migration):
                     models.CharField(
                         max_length=20,
                         unique=True,
-                        validators=[project_recording.validators.PhoneNumberValidator],
                     ),
                 ),
                 ("firstname", models.CharField(max_length=255)),
@@ -127,7 +125,6 @@ class Migration(migrations.Migration):
                     models.CharField(
                         max_length=20,
                         unique=True,
-                        validators=[project_recording.validators.PhoneNumberValidator],
                     ),
                 ),
                 ("name", models.CharField(max_length=255)),

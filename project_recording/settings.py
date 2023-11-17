@@ -38,9 +38,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    "record.apps.RecordConfig",
     "debug_toolbar",
     "django_extensions",
-    "record.apps.RecordConfig",
     "django_filters",
     "rest_framework",
 
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 #         ...
 #     ),
 # }
+
 
 
 # REST_FRAMEWORK = {
@@ -74,6 +75,7 @@ MIDDLEWARE = [
 
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "debug_toolbar_force.middleware.ForceDebugToolbarMiddleware",
+    "project_recording.middleware.ExceptionMiddleware"
 
 ]
 

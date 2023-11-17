@@ -1,33 +1,34 @@
-from django.contrib.auth.validators import UnicodeUsernameValidator
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView
 from rest_framework import serializers
 from rest_framework import status
 from rest_framework.response import Response
-from project_recording.validators import PhoneNumberValidator
-from record.models import ActivitysChoices
 from record.services.users_services import create_user
 
 
 class CreateUserApi(APIView):
 
     class InputSerializer(serializers.Serializer):
+
         username = serializers.CharField(label="Логин",
                                          max_length=150,
-                                         help_text="Required. 150 characters or fewer. "
-                                                   "Letters, digits and @/./+/-/_ only.",
-                                         validators=[UnicodeUsernameValidator()],
+                                         help_text="Обязательное поле. Не более 150 символов."
+                                                   "Только буквы, цифры и символы @/./+/-/_.",
                                          error_messages={
-                                             "unique": "A user with that username already exists.",
+                                             "max_length": "Не более 150 символов"
                                          })
-        password = serializers.CharField(label="Пароль",
-                                         max_length=128,
-                                         help_text="Required. 150 characters or fewer. "
-                                                   "Letters, digits and @/./+/-/_ only."
-                                         )
-        password2 = serializers.CharField(label="Пароль",
+        password = serializers.RegexField(label="Пароль",
+                                          regex=r"(?=.*[\d])(?=.*[!@#$%^&*.])(?=.*[a-z])(?=.*[A-Z])"
+                                                r"[0-9a-zA-Z!@#$%^&*.]{6,}",
                                           max_length=128,
-                                          help_text="Повторите пароль"
+                                          help_text="Обязательное поле. Не более 128 символов."
+                                                    "Пароль должен содержать латинские заглавные и строчные буквы,"
+                                                    "цифры, спецсимволы. Длина пароля не менее 6 символов",
+                                          error_messages={
+                                              "invalid": "Ненадежный пароль",
+                                              "max_length": "Не более 128 символов"
+                                          })
+        password2 = serializers.CharField(label="Пароль",
+                                          help_text="Повторите пароль",
                                           )
         first_name = serializers.CharField(label="Имя",
                                            max_length=150,
@@ -38,19 +39,33 @@ class CreateUserApi(APIView):
         last_name = serializers.CharField(label="Фамилия",
                                           max_length=150,
                                           help_text='Введите вашу фамилию',
-                                          )
+                                          error_messages={
+                                              "max_length": "Не более 150 символов"
+                                          })
         email = serializers.EmailField(label="Почта",
-                                       help_text='Введите действующую почту'
-                                       )
-        phone_number = serializers.CharField(label="Номер телефона",
-                                             max_length=20,
-                                             validators=[PhoneNumberValidator()]
-                                             )
+                                       help_text='Введите действующую почту',
+                                       error_messages={
+                                           "invalid": "email invalid",
+                                       })
+        phone_number = serializers.RegexField(label="Номер телефона",
+                                              regex=r"^((8|\+7)?)[\d]{10}$",
+                                              help_text="Введите номер телефона из 11 цифр",
+                                              error_messages={
+                                                  "invalid": "Проверьте правильность номера",
+                                              })
         birth_date = serializers.DateField(label="Дата рождения",
                                            )
         photo = serializers.ImageField(label="Фото",
                                        required=False
                                        )
+
+        def validate(self, data: dict):
+            if data['password'] != data['password2']:
+                raise serializers.ValidationError({
+                    "password2": "пароли не совпадают"
+                })
+            del data['password2']
+            return data
 
     def post(self, request):
         serializer = self.InputSerializer(data=request.data)

@@ -1,8 +1,9 @@
 from django.shortcuts import HttpResponse
 from django.views.generic import TemplateView
+from django.core import serializers
 
 from .apis.users_api import CreateUserApi
-from .selectors.events_selectors import EventsCategoryFilter
+from .selectors.events_selectors import EventsCategoryFilter, events_category
 
 
 # Create your views here.

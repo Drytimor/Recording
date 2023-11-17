@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User, UserManager
-from project_recording.validators import PhoneNumberValidator
+from django.utils import timezone
+from django.contrib.auth.models import User
 from django.db.models import F, Q
 
 # Create your models here.
@@ -9,11 +9,12 @@ from django.db.models import F, Q
 class AbstractInfo(models.Model):
     """Передает общую информацию:
        номер телефона"""
-    phone_number_validator = PhoneNumberValidator()
 
     phone_number = models.CharField(max_length=20,
                                     unique=True,
-                                    validators=[phone_number_validator])
+                                    error_messages={
+                                        "unique": "такой номер телефона уже зарегистрирован"
+                                    })
 
     class Meta:
         abstract = True
@@ -50,12 +51,10 @@ class Organizations(AbstractInfo):
                                 on_delete=models.CASCADE,
                                 related_name='organizations')
     name = models.CharField(max_length=255)
-
     activitys = models.ForeignKey('activitys',
                                   on_delete=models.SET_NULL,
                                   null=True,
                                   related_name='organizations')
-
     profile = models.JSONField(null=True,
                                blank=True)
     photo = models.ImageField(upload_to='photo_organization',
@@ -63,6 +62,7 @@ class Organizations(AbstractInfo):
                               height_field=150,
                               null=True,
                               blank=True)
+    date_joined = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.name}"
@@ -96,12 +96,16 @@ class Employees(AbstractInfo):
     lastname = models.CharField(max_length=255)
     profile = models.JSONField(null=True,
                                blank=True)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True,
+                              error_messages={
+                                  "unique": "такой email адрес уже зарегистрирован"
+                              })
     photo = models.ImageField(upload_to='photo_employee',
                               width_field=150,
                               height_field=150,
                               null=True,
                               blank=True)
+    date_joined = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.firstname}"

@@ -29,6 +29,7 @@ RegistrationForm.addEventListener("submit", (e) => {
 async function CreateUserApi(request){
     let response = await fetch(request)
     let event_data = await response.json()
+
     console.log(event_data)
 }
 

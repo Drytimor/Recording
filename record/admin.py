@@ -1,8 +1,22 @@
 from django.contrib import admin
+from django.contrib.auth.admin import User, UserAdmin as BaseUserAdmin
 from .models import Organizations, Employees, Events, Customers, Recordings, HistoryRecordings
 
 
 # Register your models here.
+
+admin.site.unregister(User)
+
+
+class CustomerInline(admin.StackedInline):
+    model = Customers
+    can_delete = False
+    verbose_name = "профиль"
+
+
+@admin.register(User)
+class UserAdmin(BaseUserAdmin):
+    inlines = [CustomerInline]
 
 
 @admin.register(Organizations)
@@ -13,6 +27,7 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 @admin.register(Employees)
 class EmployeeAdmin(admin.ModelAdmin):
+
     list_display = ["organization", "firstname", "lastname", "email", ]
 
 
@@ -27,12 +42,6 @@ class EventsAdmin(admin.ModelAdmin):
     @admin.display(description="Start time - End time")
     def time_events(self, obj):
         return f"{obj.start_time}-{obj.end_time}"
-
-
-@admin.register(Customers)
-class CustomerAdmin(admin.ModelAdmin):
-    list_display = ["user", "birth_date"]
-    filter_horizontal = ('hobby',)
 
 
 @admin.register(Recordings)
